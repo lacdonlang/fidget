@@ -1,0 +1,225 @@
+/* 状态 */
+"status.off.title" = "Off";
+"status.off.detail" = "Fidget is turned off.";
+"status.blocked.title" = "Needs permission";
+"status.blocked.detail" = "Grant Accessibility access so Fidget can move the pointer.";
+"status.paused.title" = "Paused";
+"status.paused.manual.indefinite" = "Paused until you resume.";
+"status.paused.manual.until" = "Paused until %@.";
+"status.paused.screenLocked" = "Screen is locked or the screen saver is running.";
+"status.paused.onBattery" = "Paused while on battery power.";
+"status.paused.schedule" = "Outside schedule · resumes %@.";
+"status.paused.schedule.never" = "Outside schedule · no active days selected.";
+"status.paused.app" = "Paused while %@ is running.";
+"status.paused.media" = "Another app is keeping the display awake.";
+"status.watching.title" = "Watching";
+"status.watching.detail" = "Idle for %@ · moving in %@";
+"status.active.title" = "Active";
+"status.active.detail" = "Idle for %@ · %d moves · next in %@";
+
+/* 弹出面板 */
+"popover.enable" = "Keep my Mac awake";
+"popover.pause" = "Pause";
+"popover.resume" = "Resume";
+"popover.moveNow" = "Move Now";
+"popover.settings" = "Settings…";
+"popover.about" = "About";
+"popover.quit" = "Quit";
+"popover.grantAccess" = "Grant Access";
+"popover.openSystemSettings" = "Open System Settings";
+"permission.reset" = "Reset Permission";
+"permission.reset.title" = "Still not authorized?";
+"permission.reset.link" = "Switched on but still not authorized? Reset permission";
+"permission.reset.hint" = "If Fidget is already switched on in System Settings but still shows as not authorized, an older build probably left a stale record behind. Click “Reset Permission”, then switch Fidget on again in System Settings.";
+"popover.warning.pointer" = "The pointer didn't move (%d times in a row). Check the Accessibility permission.";
+"stats.today" = "Today";
+"stats.total" = "Total";
+"stats.running" = "Active time";
+
+/* 暂停预设 */
+"pause.minutes15" = "15 minutes";
+"pause.minutes30" = "30 minutes";
+"pause.hour1" = "1 hour";
+"pause.hours2" = "2 hours";
+"pause.hours4" = "4 hours";
+"pause.restOfDay" = "Rest of today";
+"pause.indefinite" = "Until I resume";
+
+/* 右键菜单 */
+"menu.enable" = "Enable";
+"menu.disable" = "Disable";
+"menu.pauseFor" = "Pause For";
+
+/* 设置 */
+"settings.title" = "Fidget Settings";
+"section.general" = "General";
+"section.movement" = "Movement";
+"section.schedule" = "Schedule";
+"section.rules" = "Smart Pause";
+"section.keepAwake" = "Keep Awake";
+"section.advanced" = "Advanced";
+"section.general.subtitle" = "Startup, menu bar, shortcut and permissions";
+"section.movement.subtitle" = "When Fidget steps in and how the pointer moves";
+"section.schedule.subtitle" = "Run only on the days and hours you choose";
+"section.rules.subtitle" = "Step aside automatically when these happen";
+"section.keepAwake.subtitle" = "Keep the display and the system awake";
+"section.advanced.subtitle" = "Statistics, diagnostics, logs and settings file";
+
+"general.startup" = "Startup";
+"general.launchAtLogin" = "Launch at login";
+"general.launchAtLogin.approval" = "The login item needs approval in System Settings.";
+"general.launchAtLogin.unavailable" = "Available only when Fidget runs as an installed app.";
+"general.openLoginItems" = "Open Login Items";
+"general.menuBar" = "Menu Bar";
+"general.iconStyle" = "Icon";
+"iconStyle.cursor" = "Cursor";
+"iconStyle.mouse" = "Mouse";
+"iconStyle.bolt" = "Bolt";
+"iconStyle.eye" = "Eye";
+"iconStyle.dot" = "Dot";
+"general.showCountdown" = "Show countdown next to the icon";
+"general.shortcut" = "Keyboard Shortcut";
+"general.toggleShortcut" = "Toggle Fidget";
+"general.shortcut.hint" = "Press the shortcut anywhere to enable, disable or resume Fidget.";
+"general.clear" = "Clear";
+"general.language" = "Language";
+"general.language.system" = "System default";
+"general.appearanceAndLanguage" = "Appearance & Language";
+"general.appearance" = "Appearance";
+"appearance.system" = "System";
+"appearance.light" = "Light";
+"appearance.dark" = "Dark";
+"general.permissions" = "Permissions";
+"general.accessibility" = "Accessibility";
+"general.accessibility.granted" = "Granted";
+"general.accessibility.missing" = "Not granted";
+"general.showOnboarding" = "Show Setup Assistant…";
+
+"movement.timing" = "Timing";
+"movement.idleThreshold" = "Start after idle for";
+"movement.interval" = "Then move every";
+"movement.timing.hint" = "Fidget only moves the pointer after you haven't touched the mouse or keyboard for the idle time above. Your own input always wins.";
+"movement.pattern" = "Movement";
+"movement.invisible" = "Invisible mode (1 px, instant)";
+"movement.returnToOrigin" = "Return to the original position";
+"movement.amplitude" = "Distance";
+"movement.duration" = "Duration";
+"movement.testNow" = "Move Now";
+"movement.lastResult.ok" = "Last move at %@ · pointer moved";
+"movement.lastResult.failed" = "Last move at %@ · pointer did not move";
+"pattern.nudge" = "Nudge";
+"pattern.circle" = "Circle";
+"pattern.square" = "Square";
+"pattern.figureEight" = "Figure eight";
+"pattern.randomWalk" = "Random walk";
+
+"schedule.enable" = "Only run during these hours";
+"schedule.hint" = "Outside the schedule Fidget pauses automatically and resumes on its own.";
+"schedule.days" = "Days";
+"schedule.weekdays" = "Weekdays";
+"schedule.everyDay" = "Every day";
+"schedule.hours" = "Hours";
+"schedule.start" = "From";
+"schedule.end" = "To";
+"schedule.overnight" = "This window crosses midnight.";
+"schedule.next" = "Next active";
+"schedule.next.now" = "Now";
+"schedule.next.never" = "Never";
+
+"rules.system" = "System";
+"rules.screenLocked" = "Pause when the screen is locked or the screen saver is on";
+"rules.battery" = "Pause when running on battery";
+"rules.media" = "Pause while another app keeps the display awake (video, presentations, calls)";
+"rules.media.holders" = "Currently keeping the display awake: %@";
+"rules.apps" = "Apps";
+"rules.appMode" = "Pause when a listed app is";
+"rules.appMode.running" = "Running";
+"rules.appMode.frontmost" = "Frontmost";
+"rules.apps.empty" = "No apps added yet.";
+"rules.chooseApp" = "Choose App…";
+"rules.chooseApp.prompt" = "Add";
+"rules.addRunning" = "Add Running App";
+"rules.remove" = "Remove";
+
+"keepAwake.title" = "Sleep prevention";
+"keepAwake.display" = "Prevent the display from sleeping";
+"keepAwake.system" = "Prevent the system from sleeping";
+"keepAwake.display.detail" = "The screen stays on while you are away instead of sleeping when idle.";
+"keepAwake.system.detail" = "The screen can still turn off, but the Mac won't sleep when idle.";
+"keepAwake.hint" = "Uses macOS power assertions (like caffeinate) in addition to moving the pointer. They are only held while Fidget is enabled and not paused.";
+"keepAwake.state" = "Currently held";
+
+"advanced.statistics" = "Statistics";
+"advanced.stats.today" = "Moves today";
+"advanced.stats.total" = "Total moves";
+"advanced.stats.last" = "Last move";
+"advanced.stats.running" = "Total active time";
+"advanced.stats.never" = "Never";
+"advanced.resetStats" = "Reset Statistics";
+"advanced.diagnostics" = "Diagnostics";
+"advanced.diag.permission" = "Accessibility granted";
+"advanced.diag.systemIdle" = "System idle";
+"advanced.diag.realIdle" = "Real idle (excluding Fidget)";
+"advanced.diag.status" = "Engine state";
+"advanced.diag.locked" = "Screen locked";
+"advanced.diag.battery" = "On battery";
+"advanced.diag.assertions" = "Power assertions";
+"advanced.diag.holders" = "Display kept awake by";
+"advanced.diag.lastJiggle" = "Last move";
+"advanced.copyDiagnostics" = "Copy Diagnostics";
+"advanced.logging" = "Logging";
+"advanced.fileLogging" = "Write a log file (~/Library/Logs/Fidget)";
+"advanced.revealLog" = "Show Log File";
+"advanced.settingsFile" = "Settings";
+"advanced.verifyMovement" = "Verify that the pointer actually moved";
+"advanced.export" = "Export…";
+"advanced.import" = "Import…";
+"advanced.revealSettings" = "Show Settings File";
+"advanced.resetSettings" = "Reset to Defaults";
+"advanced.about" = "About";
+"advanced.version" = "Version";
+"advanced.checkUpdates" = "Check for Updates…";
+"advanced.github" = "GitHub Repository";
+
+/* 引导 */
+"onboarding.title" = "Welcome to Fidget";
+"onboarding.welcome.text" = "Fidget keeps your Mac awake and your status green by nudging the pointer whenever you step away.";
+"onboarding.feature.idle" = "Moves the pointer only after you have been idle, and stops the moment you touch the mouse or keyboard.";
+"onboarding.feature.rules" = "Schedules, battery and app rules decide when Fidget should stay quiet.";
+"onboarding.feature.privacy" = "Runs entirely on your Mac. No network access, no accounts.";
+"onboarding.permission.title" = "Allow Fidget to move the pointer";
+"onboarding.permission.text" = "macOS requires the Accessibility permission for apps that control the pointer. Click Grant Access, then turn on Fidget in the list.";
+"onboarding.permission.granted" = "Access granted";
+"onboarding.permission.missing" = "Waiting for permission…";
+"onboarding.permission.note" = "If Fidget doesn't appear in the list, drag Fidget.app from the Applications folder into it.";
+"onboarding.prefs.title" = "A few preferences";
+"onboarding.prefs.text" = "You can change everything later in Settings.";
+"onboarding.done.title" = "All set";
+"onboarding.done.text" = "Fidget lives in your menu bar. Click the icon to pause, resume or open Settings. Right-click for a quick menu.";
+"onboarding.back" = "Back";
+"onboarding.continue" = "Continue";
+"onboarding.finish" = "Done";
+"onboarding.skip" = "Skip";
+
+/* 关于 */
+"about.title" = "About Fidget";
+"about.tagline" = "Keeps your Mac awake with tiny mouse movements while you're away.";
+"about.credit" = "Inspired by Automatic Mouse Mover by Prashant Gupta. Rebuilt for Apple Silicon.";
+"about.license" = "MIT License";
+"about.version" = "Version %@ (%@)";
+
+/* 快捷键录制 */
+"keyRecorder.prompt" = "Click to record";
+"keyRecorder.recording" = "Press keys…";
+"keyRecorder.invalid" = "Add ⌘, ⌥ or ⌃";
+
+/* 通用与错误 */
+"common.yes" = "Yes";
+"common.no" = "No";
+"common.on" = "On";
+"common.off" = "Off";
+"common.none" = "None";
+"common.dismiss" = "Dismiss";
+"errors.settingsSave" = "Could not save settings: %@";
+"errors.loginItem" = "Could not change the login item: %@";
+"errors.import" = "Could not import settings: %@";

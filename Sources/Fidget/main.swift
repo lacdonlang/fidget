@@ -1,0 +1,2 @@
+import FidgetApp
+FidgetAppEntry.run()

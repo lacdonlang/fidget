@@ -1,0 +1,19 @@
+# SwiftPM
+.build/
+.swiftpm/
+Package.resolved
+# 打包产物
+build/
+dist/
+*.dmg
+*.zip
+*.pkg
+# Xcode（若用 Xcode 打开 Package.swift）
+xcuserdata/
+DerivedData/
+*.xcodeproj
+*.xcworkspace
+# 系统
+.DS_Store
+# 本地签名配置（见 docs/SIGNING.md）
+.signing.env

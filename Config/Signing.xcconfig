@@ -1,0 +1,8 @@
+// 本地签名配置（被 project.yml 引用）。
+// 默认 ad-hoc 签名，可直接在 Xcode 里运行。要用自己的开发者账号签名，改成：
+//   DEVELOPMENT_TEAM = 你的 Team ID（10 位）
+//   CODE_SIGN_STYLE = Automatic
+//   CODE_SIGN_IDENTITY = Apple Development      // Archive 发布时 Xcode 会自动改用 Developer ID Application
+DEVELOPMENT_TEAM =
+CODE_SIGN_STYLE = Manual
+CODE_SIGN_IDENTITY = -

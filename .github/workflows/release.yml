@@ -1,0 +1,77 @@
+name: Release
+
+# 推送 v 开头的标签（例如 v1.0.0）时：测试 → 用 Developer ID 签名 → 公证 → 打包 DMG 与 zip → 创建 GitHub Release。
+# 需要的 Secrets 见 docs/SIGNING.md；缺少证书时产出临时签名版本，缺少公证凭据时跳过公证。
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  release:
+    runs-on: macos-15
+    permissions:
+      contents: write
+    env:
+      # 步骤的 if 里不能直接引用 secrets，先在这里换算成普通环境变量。
+      HAS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE_P12 != '' }}
+      HAS_NOTARY: ${{ secrets.NOTARY_APPLE_ID != '' && secrets.NOTARY_TEAM_ID != '' && secrets.NOTARY_PASSWORD != '' }}
+      CODESIGN_IDENTITY: ${{ secrets.CODESIGN_IDENTITY || '-' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # 最新的 Xcode 不一定能部署到我们支持的最低系统（macOS 11），按 SDK 的声明挑选。
+      - name: 选择 Xcode
+        run: scripts/select-xcode.sh
+      - name: 测试
+        run: swift test
+
+      - name: 导入签名证书
+        if: env.HAS_CERTIFICATE == 'true'
+        env:
+          P12_BASE64: ${{ secrets.MACOS_CERTIFICATE_P12 }}
+          P12_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(uuidgen)"
+          echo "$P12_BASE64" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/cert.p12" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security list-keychain -d user -s "$KEYCHAIN" login.keychain
+          rm -f "$RUNNER_TEMP/cert.p12"
+
+      - name: 构建并签名
+        run: STRICT_MIN_OS=1 scripts/build-app.sh release
+      - name: 检查产物
+        run: scripts/verify-app.sh build/Fidget.app
+
+      - name: 公证 .app
+        if: env.HAS_NOTARY == 'true'
+        env:
+          NOTARY_APPLE_ID: ${{ secrets.NOTARY_APPLE_ID }}
+          NOTARY_TEAM_ID: ${{ secrets.NOTARY_TEAM_ID }}
+          NOTARY_PASSWORD: ${{ secrets.NOTARY_PASSWORD }}
+        run: |
+          xcrun notarytool store-credentials fidget-notary \
+            --apple-id "$NOTARY_APPLE_ID" --team-id "$NOTARY_TEAM_ID" --password "$NOTARY_PASSWORD"
+          scripts/notarize.sh build/Fidget.app
+
+      - name: 打包 DMG 与 zip
+        run: |
+          scripts/make-dmg.sh build/Fidget.app
+          ditto -c -k --keepParent build/Fidget.app "dist/Fidget-$(cat VERSION).zip"
+
+      - name: 公证 DMG
+        if: env.HAS_NOTARY == 'true'
+        run: scripts/notarize.sh "dist/Fidget-$(cat VERSION).dmg"
+
+      - name: 创建 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.dmg
+            dist/*.zip
+          generate_release_notes: true

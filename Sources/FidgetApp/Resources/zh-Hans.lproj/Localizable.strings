@@ -1,0 +1,225 @@
+/* 状态 */
+"status.off.title" = "已关闭";
+"status.off.detail" = "Fidget 已关闭。";
+"status.blocked.title" = "需要权限";
+"status.blocked.detail" = "请授予辅助功能权限，Fidget 才能移动指针。";
+"status.paused.title" = "已暂停";
+"status.paused.manual.indefinite" = "已暂停，直到你手动恢复。";
+"status.paused.manual.until" = "已暂停，%@ 恢复。";
+"status.paused.screenLocked" = "屏幕已锁定或屏保运行中。";
+"status.paused.onBattery" = "使用电池供电时暂停。";
+"status.paused.schedule" = "不在计划时段 · %@ 恢复。";
+"status.paused.schedule.never" = "不在计划时段 · 未选择任何工作日。";
+"status.paused.app" = "%@ 运行期间暂停。";
+"status.paused.media" = "另一个应用正在保持显示器唤醒。";
+"status.watching.title" = "监测中";
+"status.watching.detail" = "已闲置 %@ · %@ 后开始移动";
+"status.active.title" = "工作中";
+"status.active.detail" = "已闲置 %@ · 已移动 %d 次 · %@ 后再次移动";
+
+/* 弹出面板 */
+"popover.enable" = "保持 Mac 唤醒";
+"popover.pause" = "暂停";
+"popover.resume" = "恢复";
+"popover.moveNow" = "立即移动";
+"popover.settings" = "设置…";
+"popover.about" = "关于";
+"popover.quit" = "退出";
+"popover.grantAccess" = "授予权限";
+"popover.openSystemSettings" = "打开系统设置";
+"permission.reset" = "重置权限";
+"permission.reset.title" = "仍显示未授权？";
+"permission.reset.link" = "已经打开开关却仍显示未授权？重置权限";
+"permission.reset.hint" = "如果系统设置里 Fidget 的开关已经打开，这里却仍显示未授权，多半是旧版本留下的授权记录。点击“重置权限”，再在系统设置里重新打开 Fidget 的开关。";
+"popover.warning.pointer" = "指针没有移动（连续 %d 次）。请检查辅助功能权限。";
+"stats.today" = "今日";
+"stats.total" = "累计";
+"stats.running" = "工作时长";
+
+/* 暂停预设 */
+"pause.minutes15" = "15 分钟";
+"pause.minutes30" = "30 分钟";
+"pause.hour1" = "1 小时";
+"pause.hours2" = "2 小时";
+"pause.hours4" = "4 小时";
+"pause.restOfDay" = "今天剩余时间";
+"pause.indefinite" = "直到我手动恢复";
+
+/* 右键菜单 */
+"menu.enable" = "启用";
+"menu.disable" = "停用";
+"menu.pauseFor" = "暂停";
+
+/* 设置 */
+"settings.title" = "Fidget 设置";
+"section.general" = "通用";
+"section.movement" = "移动";
+"section.schedule" = "计划";
+"section.rules" = "智能暂停";
+"section.keepAwake" = "防休眠";
+"section.advanced" = "高级";
+"section.general.subtitle" = "启动方式、菜单栏、快捷键与权限";
+"section.movement.subtitle" = "Fidget 何时出手，指针怎样移动";
+"section.schedule.subtitle" = "只在你指定的日子和时段工作";
+"section.rules.subtitle" = "遇到这些情况时自动让路";
+"section.keepAwake.subtitle" = "让显示器和系统保持清醒";
+"section.advanced.subtitle" = "统计、诊断、日志与设置文件";
+
+"general.startup" = "启动";
+"general.launchAtLogin" = "登录时启动";
+"general.launchAtLogin.approval" = "登录项需要在系统设置中批准。";
+"general.launchAtLogin.unavailable" = "仅当 Fidget 以已安装的应用形式运行时可用。";
+"general.openLoginItems" = "打开登录项设置";
+"general.menuBar" = "菜单栏";
+"general.iconStyle" = "图标";
+"iconStyle.cursor" = "指针";
+"iconStyle.mouse" = "鼠标";
+"iconStyle.bolt" = "闪电";
+"iconStyle.eye" = "眼睛";
+"iconStyle.dot" = "圆点";
+"general.showCountdown" = "在图标旁显示倒计时";
+"general.shortcut" = "键盘快捷键";
+"general.toggleShortcut" = "切换 Fidget";
+"general.shortcut.hint" = "在任何地方按下快捷键即可启用、停用或恢复 Fidget。";
+"general.clear" = "清除";
+"general.language" = "语言";
+"general.language.system" = "跟随系统";
+"general.appearanceAndLanguage" = "外观与语言";
+"general.appearance" = "外观";
+"appearance.system" = "跟随系统";
+"appearance.light" = "浅色";
+"appearance.dark" = "深色";
+"general.permissions" = "权限";
+"general.accessibility" = "辅助功能";
+"general.accessibility.granted" = "已授权";
+"general.accessibility.missing" = "未授权";
+"general.showOnboarding" = "显示设置向导…";
+
+"movement.timing" = "时机";
+"movement.idleThreshold" = "闲置多久后开始";
+"movement.interval" = "之后每隔";
+"movement.timing.hint" = "只有当你在上述时长内没有碰过鼠标和键盘，Fidget 才会移动指针。你自己的操作永远优先。";
+"movement.pattern" = "移动方式";
+"movement.invisible" = "隐形模式（1 像素、瞬时）";
+"movement.returnToOrigin" = "移动后回到原位";
+"movement.amplitude" = "距离";
+"movement.duration" = "时长";
+"movement.testNow" = "立即移动";
+"movement.lastResult.ok" = "上次移动 %@ · 指针已移动";
+"movement.lastResult.failed" = "上次移动 %@ · 指针没有移动";
+"pattern.nudge" = "轻推";
+"pattern.circle" = "圆形";
+"pattern.square" = "方形";
+"pattern.figureEight" = "8 字形";
+"pattern.randomWalk" = "随机游走";
+
+"schedule.enable" = "仅在以下时段工作";
+"schedule.hint" = "计划时段之外 Fidget 会自动暂停，并在时段开始时自动恢复。";
+"schedule.days" = "日期";
+"schedule.weekdays" = "工作日";
+"schedule.everyDay" = "每天";
+"schedule.hours" = "时间";
+"schedule.start" = "从";
+"schedule.end" = "到";
+"schedule.overnight" = "该时段跨越午夜。";
+"schedule.next" = "下次生效";
+"schedule.next.now" = "现在";
+"schedule.next.never" = "永不";
+
+"rules.system" = "系统";
+"rules.screenLocked" = "锁屏或屏保运行时暂停";
+"rules.battery" = "使用电池供电时暂停";
+"rules.media" = "其他应用正在保持显示器唤醒时暂停（视频、演示、通话）";
+"rules.media.holders" = "当前保持显示器唤醒的应用：%@";
+"rules.apps" = "应用";
+"rules.appMode" = "当列表中的应用处于";
+"rules.appMode.running" = "运行中";
+"rules.appMode.frontmost" = "最前";
+"rules.apps.empty" = "尚未添加应用。";
+"rules.chooseApp" = "选择应用…";
+"rules.chooseApp.prompt" = "添加";
+"rules.addRunning" = "添加运行中的应用";
+"rules.remove" = "移除";
+
+"keepAwake.title" = "阻止休眠";
+"keepAwake.display" = "阻止显示器休眠";
+"keepAwake.system" = "阻止系统休眠";
+"keepAwake.display.detail" = "你不在时屏幕也保持点亮，不会因闲置而熄灭。";
+"keepAwake.system.detail" = "屏幕可以照常熄灭，但 Mac 不会因闲置而睡眠。";
+"keepAwake.hint" = "在移动指针之外，额外使用 macOS 电源断言（类似 caffeinate）。仅在 Fidget 已启用且未暂停时持有。";
+"keepAwake.state" = "当前持有";
+
+"advanced.statistics" = "统计";
+"advanced.stats.today" = "今日移动次数";
+"advanced.stats.total" = "累计移动次数";
+"advanced.stats.last" = "上次移动";
+"advanced.stats.running" = "累计工作时长";
+"advanced.stats.never" = "从未";
+"advanced.resetStats" = "重置统计";
+"advanced.diagnostics" = "诊断";
+"advanced.diag.permission" = "已授予辅助功能权限";
+"advanced.diag.systemIdle" = "系统闲置时间";
+"advanced.diag.realIdle" = "真实闲置时间（排除 Fidget 自身）";
+"advanced.diag.status" = "引擎状态";
+"advanced.diag.locked" = "屏幕已锁定";
+"advanced.diag.battery" = "电池供电";
+"advanced.diag.assertions" = "电源断言";
+"advanced.diag.holders" = "保持显示器唤醒的应用";
+"advanced.diag.lastJiggle" = "上次移动";
+"advanced.copyDiagnostics" = "拷贝诊断信息";
+"advanced.logging" = "日志";
+"advanced.fileLogging" = "写入日志文件（~/Library/Logs/Fidget）";
+"advanced.revealLog" = "显示日志文件";
+"advanced.settingsFile" = "设置";
+"advanced.verifyMovement" = "每次移动后校验指针确实移动了";
+"advanced.export" = "导出…";
+"advanced.import" = "导入…";
+"advanced.revealSettings" = "显示设置文件";
+"advanced.resetSettings" = "恢复默认设置";
+"advanced.about" = "关于";
+"advanced.version" = "版本";
+"advanced.checkUpdates" = "检查更新…";
+"advanced.github" = "GitHub 仓库";
+
+/* 引导 */
+"onboarding.title" = "欢迎使用 Fidget";
+"onboarding.welcome.text" = "当你离开时，Fidget 会轻轻移动指针，让 Mac 保持唤醒、让你的在线状态保持绿色。";
+"onboarding.feature.idle" = "只在你闲置一段时间后才移动指针；你一碰鼠标或键盘就立即停止。";
+"onboarding.feature.rules" = "计划时段、电池与应用规则决定 Fidget 何时保持安静。";
+"onboarding.feature.privacy" = "完全在本机运行，不联网、无账号。";
+"onboarding.permission.title" = "允许 Fidget 移动指针";
+"onboarding.permission.text" = "macOS 要求控制指针的应用获得辅助功能权限。点击“授予权限”，然后在列表中打开 Fidget 的开关。";
+"onboarding.permission.granted" = "已授权";
+"onboarding.permission.missing" = "等待授权…";
+"onboarding.permission.note" = "如果列表里没有 Fidget，把“应用程序”文件夹中的 Fidget.app 拖进去即可。";
+"onboarding.prefs.title" = "几个常用偏好";
+"onboarding.prefs.text" = "之后都可以在设置中修改。";
+"onboarding.done.title" = "一切就绪";
+"onboarding.done.text" = "Fidget 住在菜单栏里。点击图标可以暂停、恢复或打开设置，右键可打开快捷菜单。";
+"onboarding.back" = "上一步";
+"onboarding.continue" = "继续";
+"onboarding.finish" = "完成";
+"onboarding.skip" = "跳过";
+
+/* 关于 */
+"about.title" = "关于 Fidget";
+"about.tagline" = "在你离开时用细微的鼠标移动让 Mac 保持唤醒。";
+"about.credit" = "灵感来自 Prashant Gupta 的 Automatic Mouse Mover，为 Apple Silicon 重新打造。";
+"about.license" = "MIT 许可证";
+"about.version" = "版本 %@ (%@)";
+
+/* 快捷键录制 */
+"keyRecorder.prompt" = "点击录制";
+"keyRecorder.recording" = "请按下组合键…";
+"keyRecorder.invalid" = "需要加上 ⌘、⌥ 或 ⌃";
+
+/* 通用与错误 */
+"common.yes" = "是";
+"common.no" = "否";
+"common.on" = "开";
+"common.off" = "关";
+"common.none" = "无";
+"common.dismiss" = "关闭";
+"errors.settingsSave" = "无法保存设置：%@";
+"errors.loginItem" = "无法更改登录项：%@";
+"errors.import" = "无法导入设置：%@";
