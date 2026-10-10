@@ -4,6 +4,8 @@ VERSION="$(tr -d '[:space:]' < "$ROOT/VERSION")"
 # 支持的最低 macOS 版本，取自 Package.swift 的 platforms 声明（.macOS(.v11) → 11.0）。
 MIN_MACOS="$(sed -nE 's/.*\.macOS\(\.v([0-9]+)(_([0-9]+))?\).*/\1.\3/p' "$ROOT/Package.swift" | head -1)"
 MIN_MACOS="${MIN_MACOS%.}"; [[ "$MIN_MACOS" == *.* ]] || MIN_MACOS="$MIN_MACOS.0"
+# 构建号由版本号推出（1.3.0 → 10300）：随版本单调递增，与 git 历史无关。Sparkle 按构建号判断有没有新版本。
+VERSION_BUILD="$(awk -F. '{ printf "%d", $1 * 10000 + $2 * 100 + $3 }' <<< "$VERSION")"
 # 版本号比较：version_le 11.0 12.0 → 真。
 version_le() { [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | head -1)" = "$1" ]; }
 # 本机签名配置（不入库，见 docs/SIGNING.md）。环境变量优先于文件。

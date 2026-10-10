@@ -43,6 +43,7 @@ CI（`.github/workflows/ci.yml`）在 Apple Silicon runner 上用 `scripts/selec
 - `StatusPresentation`：每种状态的种类/标题/图标/倒计时；暂停原因文案；图标风格表。
 - `EngineDriver`：用假服务跑完整回路——阈值后产生移动、统计递增、指针不动产生警告、暂停/恢复/toggle、电源断言跟随状态、立即移动、`setNeedsTick` 合并重算；每秒的 tick 只通知运行数据（`model.live`），设置界面不随之重算。
 - SF Symbols：源码里的每个符号在 macOS 11 上存在，或登记了 macOS 11 就有的替代品并经 `Symbols.name` 使用；替代逻辑；当前系统可用的图标样式。
+- 在线更新：Info.plist 的更新源与公钥；`scripts/make-appcast.sh` 生成的 appcast（版本、构建号、最低系统、下载地址、签名属性、更新说明，CHANGELOG 缺少当前版本时失败）。
 - 菜单栏面板（`make ui-test`）：真实弹出后挂在菜单栏下方、不超出屏幕；横幅消失、面板变矮后仍然如此。
 - 本地化：用系统属性列表解析器读取各语言 strings，键集合与占位符数量一致；源码中每个 `L.t("…")`/`L.f("…")` 的键都存在；界面语言对应的区域设置（语言取覆盖值、地区沿用系统）。
 
@@ -59,5 +60,5 @@ CI（`.github/workflows/ci.yml`）在 Apple Silicon runner 上用 `scripts/selec
 8. 添加当前最前应用到规则并切换模式：运行中/最前两种模式行为正确。
 9. 开启“阻止显示器休眠”：`pmset -g assertions` 能看到 Fidget 的断言；停用后消失。
 10. 全局快捷键切换启用；语言切换即时生效；导出/导入设置；重置统计。
-11. 重启应用：设置与统计保留；登录项状态与系统一致。
+11. 重启应用：设置与统计保留；登录项状态与系统一致。发布新版本后，旧版本“检查更新…”能看到它，安装后自动重启、辅助功能授权仍在。
 12. `open fidget://pause?minutes=1`：一分钟后自动恢复。

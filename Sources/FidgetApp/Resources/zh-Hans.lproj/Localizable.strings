@@ -180,13 +180,21 @@
 "advanced.version" = "版本";
 "advanced.checkUpdates" = "检查更新…";
 "advanced.github" = "GitHub 仓库";
+"updates.title" = "更新";
+"updates.autoCheck" = "自动检查更新";
+"updates.autoCheck.hint" = "每天检查一次，有新版本时询问是否安装。";
+"updates.autoInstall" = "自动下载并安装";
+"updates.autoInstall.hint" = "在后台下载，Fidget 退出时（例如关机或注销时）完成安装。";
+"updates.lastCheck" = "上次检查：%@";
+"updates.never" = "尚未检查";
+"updates.unavailable" = "开发版不检查更新。";
 
 /* 引导 */
 "onboarding.title" = "欢迎使用 Fidget";
 "onboarding.welcome.text" = "当你离开时，Fidget 会轻轻移动指针，让 Mac 保持唤醒、让你的在线状态保持绿色。";
 "onboarding.feature.idle" = "只在你闲置一段时间后才移动指针；你一碰鼠标或键盘就立即停止。";
 "onboarding.feature.rules" = "计划时段、电池与应用规则决定 Fidget 何时保持安静。";
-"onboarding.feature.privacy" = "完全在本机运行，不联网、无账号。";
+"onboarding.feature.privacy" = "完全在本机运行，无需账号；只在检查更新时联网（可以关闭）。";
 "onboarding.permission.title" = "允许 Fidget 移动指针";
 "onboarding.permission.text" = "macOS 要求控制指针的应用获得辅助功能权限。点击“授予权限”，然后在列表中打开 Fidget 的开关。";
 "onboarding.permission.granted" = "已授权";

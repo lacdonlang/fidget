@@ -14,6 +14,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, AppActions {
     private var settingsWindow: HostedWindowController?
     private var onboardingWindow: HostedWindowController?
     private var aboutWindow: HostedWindowController?
+    private var updater: UpdateController?
     private var saveTask: Task<Void, Never>?
     private var statisticsTimer: Timer?
     private var savedStatistics: Statistics?
@@ -40,6 +41,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, AppActions {
 
         driver = EngineDriver(model: model, services: services)
         statusItem = StatusItemController(model: model, actions: self)
+        updater = UpdateController(state: model.updates)
 
         services.hotKeys?.onTrigger = { [weak self] in self?.driver.toggle() }
         services.hotKeys?.register(settings.general.hotKey)
@@ -320,6 +322,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, AppActions {
         NSPasteboard.general.setString(DiagnosticsReport.text(model: model), forType: .string)
     }
 
-    func checkForUpdates() { NSWorkspace.shared.open(AppInfo.releasesURL) }
+    /// 在线更新可用时由 Sparkle 检查；调试构建等不能在线更新时打开发布页。
+    func checkForUpdates() {
+        closePopover()
+        if updater?.checkForUpdates() != true { NSWorkspace.shared.open(AppInfo.releasesURL) }
+    }
+
+    func setAutomaticUpdateChecks(_ enabled: Bool) { updater?.setAutomaticallyChecks(enabled) }
+
+    func setAutomaticUpdateInstalls(_ enabled: Bool) { updater?.setAutomaticallyInstalls(enabled) }
     func openRepository() { NSWorkspace.shared.open(AppInfo.repositoryURL) }
 }

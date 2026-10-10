@@ -5,7 +5,7 @@
 <h1 align="center">Fidget</h1>
 
 <p align="center">Keeps your Mac awake and your status green with tiny mouse movements while you're away.<br>
-Apple Silicon only · macOS 11 Big Sur or later · Swift 6 · zero dependencies · open source (MIT)</p>
+Apple Silicon only · macOS 11 Big Sur or later · Swift 6 · automatic updates · open source (MIT)</p>
 
 <p align="center"><b>English</b> · <a href="README.zh-CN.md">简体中文</a></p>
 
@@ -23,13 +23,14 @@ Fidget is a spiritual successor to [automatic-mouse-mover](https://github.com/pr
 - **Knows when to stay quiet**: pauses automatically when the screen is locked or the screen saver is on, on battery power, outside your schedule (windows across midnight are supported), while listed apps are running or frontmost, and while another app is playing a video or a presentation.
 - **Handy sleep prevention**: optional display and system sleep assertions, held only while Fidget is working.
 - **A modern menu bar app**: status icon with a countdown, popover, right-click menu, global shortcut, setup assistant, English and Simplified Chinese, `fidget://` URL automation, and a settings window inspired by CleanMyMac with light and dark appearances.
-- **Safe and transparent**: no network access, no accounts, no third-party dependencies. Settings are a readable JSON file, and diagnostics can be copied with one click.
+- **Keeps itself up to date**: checks for a new version once a day. One click downloads it, verifies its signatures, replaces the app and relaunches it, or you can let updates install in the background.
+- **Safe and transparent**: no accounts, and the only network access is the daily update check, which you can turn off. Updates are signed with an EdDSA key and must come from the same developer. Settings are a readable JSON file, and diagnostics can be copied with one click.
 
 ## Install
 
 ### Download
 
-Download `Fidget-<version>.dmg` from [Releases](https://github.com/lacdonlang/fidget/releases) and drag Fidget into Applications. On first launch, follow the setup assistant to grant the **Accessibility** permission (System Settings → Privacy & Security → Accessibility). If Fidget's switch there is already on but the app still says it isn't authorized (this happens after installing an older build that was signed differently), click "Reset Permission" in the popover and turn the switch on again.
+Download `Fidget-<version>.dmg` from [Releases](https://github.com/lacdonlang/fidget/releases) and drag Fidget into Applications. On first launch, follow the setup assistant to grant the **Accessibility** permission (System Settings → Privacy & Security → Accessibility). If Fidget's switch there is already on but the app still says it isn't authorized (this happens after installing an older build that was signed differently), click "Reset Permission" in the popover and turn the switch on again. From then on Fidget updates itself (Settings → Advanced → Updates).
 
 ### Build from source
 

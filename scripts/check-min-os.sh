@@ -18,7 +18,11 @@ trap 'rm -rf "$WORK"' EXIT
 # SwiftPM 为带资源的目标生成 Bundle.module；类型检查时用一个同签名的替身。
 printf 'import Foundation\nextension Foundation.Bundle { static let module = Bundle.main }\n' > "$WORK/BundleModule.swift"
 
-COMMON=(-parse-as-library -target "$TARGET" -sdk "$SDK" -swift-version 6 -enable-testing -I "$WORK"
+# 第三方依赖（Sparkle）是 SwiftPM 下载的二进制框架，类型检查时从解析好的产物里找。
+swift package resolve --package-path "$ROOT" > /dev/null
+SPARKLE="$(ls -d "$ROOT"/.build/artifacts/sparkle/Sparkle/Sparkle.xcframework/macos-* | head -1)"
+
+COMMON=(-parse-as-library -target "$TARGET" -sdk "$SDK" -swift-version 6 -enable-testing -I "$WORK" -F "$SPARKLE"
         -F "$PLATFORM/Developer/Library/Frameworks" -I "$PLATFORM/Developer/usr/lib"
         -plugin-path "$TOOLCHAIN_LIB/swift/host/plugins/testing")
 sources() { find "$ROOT/$1" -name '*.swift' | sort; }

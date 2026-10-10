@@ -24,7 +24,7 @@ while read -r dependency; do
     @rpath/*)
       lib="${dependency#@rpath/}"
       if [ -f "$APP/Contents/Frameworks/$lib" ]; then
-        pass "内嵌运行时: ${lib}（$(lipo -archs "$APP/Contents/Frameworks/$lib")）"
+        pass "内嵌: ${lib}（$(lipo -archs "$APP/Contents/Frameworks/$lib")）"
       else
         fail "@rpath/$lib 没有放进 Contents/Frameworks"
       fi
@@ -36,7 +36,7 @@ done < <(otool -L "$BINARY" | tail -n +2 | awk '{ print $1 }')
 # macOS 12 以下系统里没有 Swift 并发运行时，必须内嵌；rpath 顺序决定新系统仍优先用系统自带的那份。
 rpaths="$(otool -l "$BINARY" | awk '$1 == "cmd" && $2 == "LC_RPATH" { getline; getline; print $2 }' | paste -sd ' ' -)"
 if version_le 12.0 "$minos"; then
-  [ "$rpaths" = "/usr/lib/swift" ] && pass "rpath: $rpaths" || fail "rpath 应只有 /usr/lib/swift，实际: $rpaths"
+  [ "$rpaths" = "/usr/lib/swift @executable_path/../Frameworks" ] && pass "rpath: $rpaths" || fail "rpath 顺序不对: $rpaths"
 else
   otool -L "$BINARY" | grep "@rpath/libswift_Concurrency.dylib" > /dev/null \
     && pass "Swift 并发运行时经 @rpath 引用（macOS $minos 上用内嵌版本）" \
@@ -58,7 +58,18 @@ for library in "$APP"/Contents/Frameworks/*.dylib; do
   fi
 done
 
-codesign --verify --strict "$APP" 2> /dev/null && pass "签名有效" || fail "签名无效"
+# 在线更新：框架里不该有 XPC 服务（只给沙盒应用用），更新源与验证更新用的公钥都要在 Info.plist 里。
+sparkle="$APP/Contents/Frameworks/Sparkle.framework"
+if [ -d "$sparkle" ]; then
+  [ ! -e "$sparkle/Versions/Current/XPCServices" ] && pass "Sparkle 已内嵌（$(lipo -archs "$sparkle/Versions/Current/Autoupdate")），不含 XPC 服务" || fail "Sparkle 里还有 XPC 服务"
+  feed="$(/usr/libexec/PlistBuddy -c 'Print :SUFeedURL' "$APP/Contents/Info.plist" 2> /dev/null || true)"
+  key="$(/usr/libexec/PlistBuddy -c 'Print :SUPublicEDKey' "$APP/Contents/Info.plist" 2> /dev/null || true)"
+  [[ "$feed" == https://* && -n "$key" ]] && pass "更新源: $feed" || fail "Info.plist 缺少 SUFeedURL（https）或 SUPublicEDKey"
+else
+  fail "没有内嵌 Sparkle.framework"
+fi
+
+codesign --verify --deep --strict "$APP" 2> /dev/null && pass "签名有效（含内嵌框架）" || fail "签名无效"
 
 # 实际启动：动态库解析失败、启动即崩溃都会在这里暴露。使用临时配置目录，不碰真实设置。
 config="$(mktemp -d)"

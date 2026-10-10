@@ -5,7 +5,7 @@
 <h1 align="center">Fidget</h1>
 
 <p align="center">闲时轻轻移动鼠标，让 Mac 保持唤醒、让你的在线状态保持绿色。<br>
-仅支持 Apple Silicon · macOS 11 Big Sur 及以上 · Swift 6 · 零依赖 · 开源（MIT）</p>
+仅支持 Apple Silicon · macOS 11 Big Sur 及以上 · Swift 6 · 在线更新 · 开源（MIT）</p>
 
 <p align="center"><a href="README.md">English</a> · <b>简体中文</b></p>
 
@@ -23,13 +23,14 @@ Fidget 是 [automatic-mouse-mover](https://github.com/prashantgupta24/automatic-
 - **知道什么时候该安静**：锁屏/屏保、电池供电、计划时段（支持跨午夜）、指定应用运行或在最前、其它应用正在播放视频/演示时自动暂停。
 - **顺手的防休眠**：可选的显示器/系统休眠断言，只在工作时持有。
 - **现代菜单栏体验**：状态图标与倒计时、弹出面板、右键快捷菜单、全局快捷键、首次引导、中英双语、`fidget://` URL 自动化，以及参考 CleanMyMac 设计、有浅色和深色两种外观的设置窗口。
-- **安全透明**：不联网、无账号、无第三方依赖；设置是一份可读的 JSON；诊断信息一键拷贝。
+- **在线更新**：每天检查一次新版本，点一下就下载、校验签名、替换应用并重新启动；也可以设为在后台自动安装。
+- **安全透明**：无账号，唯一的联网是每天的检查更新（可以关闭）；更新包用 EdDSA 密钥签名，且必须来自同一开发者；设置是一份可读的 JSON；诊断信息一键拷贝。
 
 ## 安装
 
 ### 下载
 
-从 [Releases](https://github.com/lacdonlang/fidget/releases) 下载 `Fidget-<版本>.dmg`，拖进“应用程序”。首次启动按引导授予**辅助功能**权限（系统设置 → 隐私与安全性 → 辅助功能）。如果系统设置里 Fidget 的开关已经打开，应用却仍显示未授权（装过签名不同的旧版本时会这样），点面板里的“重置权限”，再重新打开开关。
+从 [Releases](https://github.com/lacdonlang/fidget/releases) 下载 `Fidget-<版本>.dmg`，拖进“应用程序”。首次启动按引导授予**辅助功能**权限（系统设置 → 隐私与安全性 → 辅助功能）。如果系统设置里 Fidget 的开关已经打开，应用却仍显示未授权（装过签名不同的旧版本时会这样），点面板里的“重置权限”，再重新打开开关。之后 Fidget 会自己在线更新（设置 → 高级 → 更新）。
 
 ### 从源码构建
 

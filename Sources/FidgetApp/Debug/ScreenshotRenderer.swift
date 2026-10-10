@@ -126,6 +126,8 @@ final class ScreenshotRenderer: NSObject, NSApplicationDelegate {
         model.isAccessibilityTrusted = true
         model.loginItemStatus = .enabled
         model.live.diagnostics = LiveState.Diagnostics(systemIdleSeconds: 35, realIdleSeconds: 215, assertions: settings.keepAwake)
+        model.updates.isAvailable = true
+        model.updates.lastCheck = now.addingTimeInterval(-2 * 3600)
         return model
     }
 
@@ -164,6 +166,8 @@ final class PreviewActions: AppActions {
     func revealLogFile() {}
     func copyDiagnostics() {}
     func checkForUpdates() {}
+    func setAutomaticUpdateChecks(_ enabled: Bool) {}
+    func setAutomaticUpdateInstalls(_ enabled: Bool) {}
     func openRepository() {}
 }
 #endif

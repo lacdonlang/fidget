@@ -6,7 +6,7 @@ import PackageDescription
 // 分层：
 //   FidgetCore   纯 Swift 逻辑（设置模型、状态机、移动轨迹、计划表、统计），无 AppKit 依赖，可完全单元测试。
 //   FidgetSystem macOS 系统适配层（CoreGraphics / IOKit / AppKit / ServiceManagement / Carbon）。
-//   FidgetApp    SwiftUI 界面、菜单栏控制器、组合根；以库的形式存在便于测试。
+//   FidgetApp    SwiftUI 界面、菜单栏控制器、组合根；以库的形式存在便于测试。在线更新用 Sparkle（唯一的第三方依赖）。
 //   Fidget       可执行壳，仅调用 FidgetApp.run()。
 let package = Package(
     name: "Fidget",
@@ -19,12 +19,16 @@ let package = Package(
         // Xcode 工程（project.yml）通过该库产品链接全部应用代码。
         .library(name: "FidgetApp", targets: ["FidgetApp"]),
     ],
+    dependencies: [
+        // 在线更新。2.10 起要求 macOS 12，锁在仍支持 macOS 11 的 2.9.x（只接受 2.9 的补丁版本）。
+        .package(url: "https://github.com/sparkle-project/Sparkle", .upToNextMinor(from: "2.9.6")),
+    ],
     targets: [
         .target(name: "FidgetCore"),
         .target(name: "FidgetSystem", dependencies: ["FidgetCore"]),
         .target(
             name: "FidgetApp",
-            dependencies: ["FidgetCore", "FidgetSystem"],
+            dependencies: ["FidgetCore", "FidgetSystem", .product(name: "Sparkle", package: "Sparkle")],
             resources: [.process("Resources")]
         ),
         .executableTarget(name: "Fidget", dependencies: ["FidgetApp"]),

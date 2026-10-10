@@ -180,13 +180,21 @@
 "advanced.version" = "Version";
 "advanced.checkUpdates" = "Check for Updates…";
 "advanced.github" = "GitHub Repository";
+"updates.title" = "Updates";
+"updates.autoCheck" = "Check for updates automatically";
+"updates.autoCheck.hint" = "Checks once a day and asks before installing a new version.";
+"updates.autoInstall" = "Download and install automatically";
+"updates.autoInstall.hint" = "Downloads in the background and installs when Fidget quits, for example when you shut down or log out.";
+"updates.lastCheck" = "Last checked %@";
+"updates.never" = "Not checked yet";
+"updates.unavailable" = "Development builds don't check for updates.";
 
 /* 引导 */
 "onboarding.title" = "Welcome to Fidget";
 "onboarding.welcome.text" = "Fidget keeps your Mac awake and your status green by nudging the pointer whenever you step away.";
 "onboarding.feature.idle" = "Moves the pointer only after you have been idle, and stops the moment you touch the mouse or keyboard.";
 "onboarding.feature.rules" = "Schedules, battery and app rules decide when Fidget should stay quiet.";
-"onboarding.feature.privacy" = "Runs entirely on your Mac. No network access, no accounts.";
+"onboarding.feature.privacy" = "Runs entirely on your Mac with no account. It only goes online to check for updates, which you can turn off.";
 "onboarding.permission.title" = "Allow Fidget to move the pointer";
 "onboarding.permission.text" = "macOS requires the Accessibility permission for apps that control the pointer. Click Grant Access, then turn on Fidget in the list.";
 "onboarding.permission.granted" = "Access granted";

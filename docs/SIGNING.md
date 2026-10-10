@@ -79,8 +79,17 @@ tccutil reset Accessibility com.lacdon.fidget
 | `MACOS_CERTIFICATE_PASSWORD` | .p12 密码 |
 | `CODESIGN_IDENTITY` | `Developer ID Application: 名字 (TEAMID)` |
 | `NOTARY_APPLE_ID` / `NOTARY_TEAM_ID` / `NOTARY_PASSWORD` | 公证凭据 |
+| `SPARKLE_ED_PRIVATE_KEY` | 在线更新的 EdDSA 私钥（见下） |
 
 缺少证书时 release 工作流产出临时签名的 DMG 与 zip；缺少公证凭据时跳过公证。.app 与 DMG 都会公证并装订。
+
+### 在线更新的签名密钥
+
+- 密钥用 Sparkle 的工具生成，私钥存在登录钥匙串（账号 `com.lacdon.fidget`）：
+  `.build/artifacts/sparkle/Sparkle/bin/generate_keys --account com.lacdon.fidget`；`-p` 打印公钥，`-x <文件>` 导出私钥。
+- 公钥写在 `Resources/Info.plist` 的 `SUPublicEDKey`；私钥导出后存进 Secret `SPARKLE_ED_PRIVATE_KEY`（`gh secret set SPARKLE_ED_PRIVATE_KEY < 文件`，用完删掉文件）。
+- release 工作流在公证后用它给 zip 签名，`scripts/make-appcast.sh` 生成 `appcast.xml`（版本、构建号、最低系统、下载地址、签名、CHANGELOG 里的更新说明），与 DMG、zip 一起上传。应用读的是 `releases/latest/download/appcast.xml`，所以仓库必须公开。
+- **私钥丢了就再也不能给已安装的版本推送更新**（新签名对不上旧公钥），钥匙串里那份要随系统一起备份。换密钥只能先发一个带新公钥、但仍用旧私钥签名的版本。
 
 ## 6. 校验
 

@@ -64,5 +64,11 @@
 	<false/>
 	<key>NSSupportsSuddenTermination</key>
 	<false/>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://github.com/lacdonlang/fidget/releases/latest/download/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>eN2mQilJG7vkJhUW5xphAooxOyIEtIhTvt1xt7WhSI0=</string>
 </dict>
 </plist>

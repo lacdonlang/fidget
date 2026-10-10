@@ -25,6 +25,7 @@ final class AppModel: ObservableObject {
     @Published var lastError: String?
 
     let live: LiveState
+    let updates = UpdateState()
 
     var onSettingsChanged: ((Settings, Settings) -> Void)?
 
@@ -35,6 +36,16 @@ final class AppModel: ObservableObject {
 
     /// “登录时启动”开关显示的状态：已启用或已注册但等待用户在系统设置中批准都视为开。
     var launchAtLogin: Bool { loginItemStatus == .enabled || loginItemStatus == .requiresApproval }
+}
+
+/// 在线更新的状态（见 `UpdateController`），设置界面据此显示开关与上次检查时间。
+@MainActor
+final class UpdateState: ObservableObject {
+    /// 当前构建能否在线更新（调试构建、未打包运行时不能）。
+    @Published var isAvailable = false
+    @Published var automaticallyChecks = true
+    @Published var automaticallyInstalls = false
+    @Published var lastCheck: Date?
 }
 
 /// 每个 tick 都可能变化的运行数据。

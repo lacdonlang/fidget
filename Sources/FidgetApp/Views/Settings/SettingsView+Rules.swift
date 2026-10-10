@@ -152,12 +152,38 @@ struct AdvancedSettingsView: View {
                     Button(L.t("advanced.resetSettings")) { actions.resetSettings() }.buttonStyle(GlassButtonStyle(kind: .destructive))
                 }
             }
+            UpdatesGroup(updates: model.updates, actions: actions)
             SettingsGroup(title: L.t("advanced.about")) {
                 ValueRow(symbol: "info.circle", title: L.t("advanced.version"), value: "\(AppInfo.version) (\(AppInfo.build))")
                 RowDivider()
                 ButtonRow {
-                    Button(L.t("advanced.checkUpdates")) { actions.checkForUpdates() }
                     Button(L.t("advanced.github")) { actions.openRepository() }
+                }
+            }
+        }
+    }
+}
+
+/// 在线更新：自动检查与自动安装两个开关、立即检查。开发版不能在线更新，开关变灰，“检查更新”改为打开发布页。
+private struct UpdatesGroup: View {
+    @ObservedObject var updates: UpdateState
+    let actions: AppActions
+
+    var body: some View {
+        SettingsGroup(title: L.t("updates.title"), footer: updates.isAvailable ? nil : L.t("updates.unavailable")) {
+            ToggleRow(symbol: "arrow.triangle.2.circlepath", title: L.t("updates.autoCheck"), subtitle: L.t("updates.autoCheck.hint"),
+                      isOn: Binding(get: { updates.automaticallyChecks }, set: { actions.setAutomaticUpdateChecks($0) }))
+                .disabled(!updates.isAvailable)
+            RowDivider()
+            ToggleRow(symbol: "arrow.down.circle", title: L.t("updates.autoInstall"), subtitle: L.t("updates.autoInstall.hint"),
+                      isOn: Binding(get: { updates.automaticallyInstalls }, set: { actions.setAutomaticUpdateInstalls($0) }))
+                .disabled(!updates.isAvailable || !updates.automaticallyChecks)
+            RowDivider()
+            ButtonRow {
+                Button(L.t("advanced.checkUpdates")) { actions.checkForUpdates() }
+                Spacer(minLength: 8)
+                if updates.isAvailable {
+                    FootnoteText(updates.lastCheck.map { L.f("updates.lastCheck", StatusPresentation.relativeTime($0)) } ?? L.t("updates.never"))
                 }
             }
         }

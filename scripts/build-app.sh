@@ -9,7 +9,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 CONFIG="${1:-release}"
 APP_NAME="Fidget"
 BUNDLE_ID="${BUNDLE_ID:-com.lacdon.fidget}"
-BUILD_NUMBER="${BUILD_NUMBER:-$(git -C "$ROOT" rev-list --count HEAD 2>/dev/null || echo 1)}"
+BUILD_NUMBER="${BUILD_NUMBER:-$VERSION_BUILD}"
 OUT_DIR="${APP_OUTPUT_DIR:-$ROOT/build}"
 APP="$OUT_DIR/$APP_NAME.app"
 LANGUAGES=(en zh-Hans)
@@ -50,21 +50,39 @@ sed -e "s/\$(EXECUTABLE_NAME)/$APP_NAME/g" \
 printf 'APPL????' > "$APP/Contents/PkgInfo"
 cp "$ROOT/Resources/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
 
-# 部署到 macOS 12 以下时，Swift 并发运行时不在系统里：二进制改为经 @rpath 引用，需要把工具链里的
-# 向后部署版本放进 Contents/Frameworks。
+# 经 @rpath 引用的库都放进 Contents/Frameworks：
+# - Sparkle.framework 从 SwiftPM 的构建目录整个拷过来（ditto 保留框架里的符号链接，否则签名失效）；
+#   应用没有沙盒，用不到它的 XPC 服务，删掉；
+# - 部署到 macOS 12 以下时，Swift 并发运行时不在系统里，放工具链里的向后部署版本。
+# 工具链和 Sparkle 给的都是通用二进制，应用只有 arm64，只保留这一份。
+thin_to_arm64() {
+  if [ "$(lipo -archs "$1" 2> /dev/null)" != "arm64" ]; then lipo "$1" -thin arm64 -output "$1.thin" && mv "$1.thin" "$1"; fi
+}
 RPATH_LIBS="$(otool -L "$EXECUTABLE" | awk '$1 ~ /^@rpath\// { sub("@rpath/", "", $1); print $1 }')"
 if [ -n "$RPATH_LIBS" ]; then
   TOOLCHAIN_LIB="$(cd "$(dirname "$(xcrun --find swiftc)")/../lib" && pwd)"
   mkdir -p "$APP/Contents/Frameworks"
   for lib in $RPATH_LIBS; do
-    source_lib="$(ls -d "$TOOLCHAIN_LIB"/swift-*/macosx/"$lib" 2>/dev/null | sort -V | tail -1)"
-    if [ -z "$source_lib" ]; then
-      echo "错误: 找不到 @rpath/$lib 的向后部署版本（在 $TOOLCHAIN_LIB/swift-*/macosx 下）" >&2
-      exit 1
-    fi
-    # 工具链里的是通用二进制，应用只有 arm64，只保留这一份。
-    lipo "$source_lib" -thin arm64 -output "$APP/Contents/Frameworks/$lib" 2> /dev/null || cp "$source_lib" "$APP/Contents/Frameworks/$lib"
-    echo "  内嵌 ${lib}（来自 ${source_lib#"$TOOLCHAIN_LIB/"}）"
+    case "$lib" in
+      *.framework/*)
+        framework="${lib%%.framework/*}.framework"
+        ditto "$BIN_DIR/$framework" "$APP/Contents/Frameworks/$framework"
+        rm -rf "$APP/Contents/Frameworks/$framework/Versions/Current/XPCServices" "$APP/Contents/Frameworks/$framework/XPCServices"
+        find "$APP/Contents/Frameworks/$framework" -type f -perm -u+x | while read -r file; do
+          if file "$file" | grep -q "Mach-O"; then thin_to_arm64 "$file"; fi
+        done
+        echo "  内嵌 ${framework}"
+        ;;
+      *)
+        source_lib="$(ls -d "$TOOLCHAIN_LIB"/swift-*/macosx/"$lib" 2>/dev/null | sort -V | tail -1)"
+        if [ -z "$source_lib" ]; then
+          echo "错误: 找不到 @rpath/$lib 的向后部署版本（在 $TOOLCHAIN_LIB/swift-*/macosx 下）" >&2
+          exit 1
+        fi
+        lipo "$source_lib" -thin arm64 -output "$APP/Contents/Frameworks/$lib" 2> /dev/null || cp "$source_lib" "$APP/Contents/Frameworks/$lib"
+        echo "  内嵌 ${lib}（来自 ${source_lib#"$TOOLCHAIN_LIB/"}）"
+        ;;
+    esac
   done
 fi
 # rpath 只保留两项且顺序固定：先 /usr/lib/swift，新系统优先用系统自带的运行时；再是应用内的 Frameworks。

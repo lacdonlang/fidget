@@ -10,7 +10,7 @@ Fidget 是 [automatic-mouse-mover](https://github.com/prashantgupta24/automatic-
 | 平台 | macOS 11 Big Sur+，仅 arm64 | 覆盖 Apple Silicon 能运行的所有系统（M1 首发即为 macOS 11）。只用 macOS 11 就有的 API，更新的 API 必须 `#available` 守卫并有退路；所有系统走同一条界面代码路径，见 §9 |
 | 语言/工具链 | Swift 6（语言模式 6，完整并发检查）、SwiftPM | 编译期数据竞争检查；SwiftPM 是代码与测试的唯一真源，不依赖 .xcodeproj |
 | 界面 | SwiftUI 视图 + AppKit 生命周期（`NSStatusItem` / `NSPopover` / `NSWindow`） | 菜单栏应用对弹出面板、右键菜单、窗口的控制要求高，`MenuBarExtra` 的限制太多 |
-| 依赖 | 零第三方依赖 | 系统框架足够；省掉供应链与签名/公证的麻烦 |
+| 依赖 | 只有 Sparkle（在线更新） | 其余都用系统框架；更新涉及下载、校验、替换正在运行的应用与重启，自己实现风险太高 |
 | 分发 | Developer ID 签名 + 公证（非 App Store） | 投递合成鼠标事件需要辅助功能权限，沙盒应用拿不到，App Store 版只能降级（见 §8） |
 
 ## 2. 分层
@@ -71,6 +71,7 @@ Fidget 是 [automatic-mouse-mover](https://github.com/prashantgupta24/automatic-
 - `AppDelegate`：组合根与控制中枢。装配 `AppServices.live()`，加载设置/统计，创建 `EngineDriver` 与 `StatusItemController`，处理 `fidget://` URL，实现 `AppActions` 协议供视图调用。所有设置修改都经过 `AppModel.settings` 的 `didSet` 进入 `settingsDidChange`，在这一处统一处理副作用：去抖保存、请求引擎重算、快捷键重注册、日志开关、语言切换。
 - `AppModel`（`@MainActor ObservableObject`）：界面唯一数据源：设置、警告、手动暂停、权限、登录项状态。每个 tick 都可能变化的运行数据（状态、统计、诊断）单独放在 `model.live`（`LiveState`）发布——`ObservableObject` 任一属性变化都会让全部订阅者重算，拆开后设置界面只在设置变化时重算，只有显示运行数据的视图（面板、诊断行）每秒刷新。
 - `EngineDriver`：1 Hz `Timer`（`.common` 模式，菜单打开时也能触发）。每个 tick 采集输入 → `engine.tick` → 执行副作用（异步移动、清除暂停）并应用电源断言 → 更新模型与统计。设置变更通过 `setNeedsTick()` 合并成下一轮 run loop 的一次重算。写入模型时只在值变化时赋值，状态不变的 tick 不会让界面重绘。
+- `UpdateController`：包装 Sparkle 的 `SPUStandardUpdaterController`，只在打包好的发布构建里启动；把“自动检查”“自动安装”与上次检查时间经 KVO 同步到 `model.updates`（`UpdateState`），设置界面只读它，改动经 `AppActions` 写回 Sparkle（Sparkle 自己存进 UserDefaults）。更新清单由发布流程的 `scripts/make-appcast.sh` 生成并随 Release 上传。
 - `StatusItemController`：`NSStatusItem` 左键弹出 `NSPopover`（`NSHostingController`；显示前按内容的理想尺寸设定大小，之后由宿主视图的尺寸约束带动面板伸缩。不要把 SwiftUI 里测得的尺寸写回 `contentSize`：macOS 27 上首次测得 0，面板会先按 0 高度定位再向上撑开，伸出屏幕顶端，1.1.0 即如此），右键临时挂上 `NSMenu`。图标、倒计时与提示文字订阅模型与运行数据的 `objectWillChange`，合并到下一轮 run loop 重绘，没有任何地方需要手动刷新。
 - `HostedWindowController`：承载设置/引导/关于三个 SwiftUI 窗口。这三个窗口用 `.immersive` 外观：内容延伸到透明标题栏下方、不显示标题文字。浅色还是深色取决于应用外观：`AppDelegate` 按设置里的“外观”设置 `NSApp.appearance`（跟随系统时为 nil），窗口、弹出面板与菜单随之切换。窗口关闭时释放 SwiftUI 内容（隐藏的视图否则仍会随模型每秒重算、动画仍在绘制），再次打开时重建；窗口标题由调用方提供，切换语言时自动更新（`navigationTitle` 桥接到窗口标题要 macOS 13 才有）。弹出面板同理：内容在显示时创建、关闭时释放。
 - 本地化 `L`：当前语言包与区域设置放在加锁的全局状态里。切换语言时 `LanguageState` 发布变化：窗口与弹出面板的根视图（`LocalizedRoot`）以语言为标识整体重建，所有经 `L.t` 取文案的视图——包括 AppKit 包装的控件——都换成新语言；日期、时长、星期名称等格式化也跟随界面语言而不是系统语言。
@@ -150,7 +151,7 @@ blocked ◄──────── enabled ────────► paused(r
 3. **为什么用 CGEvent 而不是 `CGWarpMouseCursorPosition`**：warp 不产生 HID 事件，不会重置系统闲置计时，Slack 等仍会判定离开。代价是必须有辅助功能权限，因此引导页与状态机都把权限当一等公民。
 4. **为什么不进 App Store**：沙盒内拿不到辅助功能权限。`PointerControlling` 协议为将来的“沙盒降级版”（warp + `IOPMAssertionDeclareUserActivity`）留了替换点，但那只能防休眠，不能保持在线状态。
 5. **为什么设置用 JSON 文件而非 UserDefaults**：可读、可导入导出、可备份、可在测试中用临时目录完整验证。
-6. **为什么零依赖**：Sparkle 之类的更新框架以后可以加，但首版用“检查更新”跳转 GitHub Releases 足够，避免公证时处理第三方框架签名。
+6. **为什么用 Sparkle 做在线更新**（1.3.0 起）：替换正在运行的应用、目录没有写权限时请求授权、检测 App Translocation、失败回滚、重启，这些边界情况 Sparkle 都处理了；EdDSA 签名加代码签名校验也比自己写可靠。锁在 2.9.x：2.10 起要求 macOS 12（与我们一样受 Xcode 27 影响）。应用没有沙盒，打包时删掉 Sparkle 的 XPC 服务，只保留 arm64，并由内向外签名（Autoupdate、Updater.app、框架、应用）。构建号由版本号推出（1.3.0 → 10300），Sparkle 靠它比较新旧，与 git 历史无关。
 7. **为什么支持到 macOS 11**：Apple Silicon 首发即搭载 macOS 11，要覆盖它能运行的所有系统。代价是放弃 `@Observable`、`NavigationSplitView`、grouped `Form` 等新 API，改用 `ObservableObject` 与自绘的设置布局；换来的是所有系统走同一条代码路径，在新系统上验证过的界面在旧系统上也一样。
 
 ## 9. 兼容 macOS 11

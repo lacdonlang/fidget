@@ -35,5 +35,7 @@ protocol AppActions: AnyObject {
     func revealLogFile()
     func copyDiagnostics()
     func checkForUpdates()
+    func setAutomaticUpdateChecks(_ enabled: Bool)
+    func setAutomaticUpdateInstalls(_ enabled: Bool)
     func openRepository()
 }

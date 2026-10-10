@@ -1,6 +1,7 @@
 name: Release
 
-# 推送 v 开头的标签（例如 v1.0.0）时：测试 → 用 Developer ID 签名 → 公证 → 打包 DMG 与 zip → 创建 GitHub Release。
+# 推送 v 开头的标签（例如 v1.0.0）时：测试 → 用 Developer ID 签名 → 公证 → 打包 DMG 与 zip →
+# 给 zip 签名并生成在线更新的 appcast.xml → 创建 GitHub Release。
 # 需要的 Secrets 见 docs/SIGNING.md；缺少证书时产出临时签名版本，缺少公证凭据时跳过公证。
 on:
   push:
@@ -62,7 +63,13 @@ jobs:
       - name: 打包 DMG 与 zip
         run: |
           scripts/make-dmg.sh build/Fidget.app
-          ditto -c -k --keepParent build/Fidget.app "dist/Fidget-$(cat VERSION).zip"
+          ditto -c -k --sequesterRsrc --keepParent build/Fidget.app "dist/Fidget-$(cat VERSION).zip"
+
+      # zip 同时是在线更新包：用 EdDSA 私钥签名后写进 appcast.xml，已安装的版本读到它就会提示更新。
+      - name: 生成更新清单
+        env:
+          SPARKLE_ED_PRIVATE_KEY: ${{ secrets.SPARKLE_ED_PRIVATE_KEY }}
+        run: scripts/make-appcast.sh "dist/Fidget-$(cat VERSION).zip" dist/appcast.xml
 
       - name: 公证 DMG
         if: env.HAS_NOTARY == 'true'
@@ -74,4 +81,5 @@ jobs:
           files: |
             dist/*.dmg
             dist/*.zip
+            dist/appcast.xml
           generate_release_notes: true
