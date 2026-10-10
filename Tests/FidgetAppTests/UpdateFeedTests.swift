@@ -25,12 +25,12 @@ struct UpdateFeedTests {
         #expect(plist["SUEnableAutomaticChecks"] as? Bool == true)
     }
 
-    @Test("appcast.xml：版本、构建号、最低系统、下载地址、签名与更新说明")
-    func appcast() throws {
+    @Test("两份更新清单：版本、构建号、最低系统、下载地址、签名相同，更新说明分别取英文与中文的更新日志")
+    func appcasts() throws {
         let version = try Self.version
         let parts = version.split(separator: ".").compactMap { Int($0) }
         let build = parts[0] * 10000 + parts[1] * 100 + parts[2]
-        let output = FileManager.default.temporaryDirectory.appendingPathComponent("appcast-\(UUID().uuidString).xml")
+        let output = FileManager.default.temporaryDirectory.appendingPathComponent("appcast-\(UUID().uuidString)", isDirectory: true)
         defer { try? FileManager.default.removeItem(at: output) }
 
         let process = Process()
@@ -40,16 +40,28 @@ struct UpdateFeedTests {
         process.standardOutput = FileHandle.nullDevice
         try process.run()
         process.waitUntilExit()
-        #expect(process.terminationStatus == 0, "make-appcast.sh 失败（CHANGELOG.md 里要有 ## \(version) 一节）")
+        #expect(process.terminationStatus == 0, "make-appcast.sh 失败（两份更新日志里都要有 ## \(version) 一节）")
 
-        let document = try XMLDocument(contentsOf: output)
-        func text(_ path: String) throws -> String? { try document.nodes(forXPath: path).first?.stringValue }
-        #expect(try text("/rss/channel/item/sparkle:version") == "\(build)")
-        #expect(try text("/rss/channel/item/sparkle:shortVersionString") == version)
-        #expect(try text("/rss/channel/item/sparkle:minimumSystemVersion") == "11.0")
-        #expect(try text("/rss/channel/item/enclosure/@url") == "https://github.com/lacdonlang/fidget/releases/download/v\(version)/Fidget-\(version).zip")
-        #expect(try text("/rss/channel/item/enclosure/@sparkle:edSignature") == "c2lnbmF0dXJl")
-        #expect(try text("/rss/channel/item/enclosure/@length") == "1234")
-        #expect(try text("/rss/channel/item/description")?.contains("<li>") == true)
+        var notes: [String] = []
+        for name in ["appcast.xml", "appcast.zh-CN.xml"] {
+            let document = try XMLDocument(contentsOf: output.appendingPathComponent(name))
+            func text(_ path: String) throws -> String? { try document.nodes(forXPath: path).first?.stringValue }
+            #expect(try text("/rss/channel/item/sparkle:version") == "\(build)")
+            #expect(try text("/rss/channel/item/sparkle:shortVersionString") == version)
+            #expect(try text("/rss/channel/item/sparkle:minimumSystemVersion") == "11.0")
+            #expect(try text("/rss/channel/item/enclosure/@url") == "https://github.com/lacdonlang/fidget/releases/download/v\(version)/Fidget-\(version).zip")
+            #expect(try text("/rss/channel/item/enclosure/@sparkle:edSignature") == "c2lnbmF0dXJl")
+            #expect(try text("/rss/channel/item/enclosure/@length") == "1234")
+            notes.append(try text("/rss/channel/item/description") ?? "")
+        }
+        #expect(notes.allSatisfy { $0.contains("<li>") })
+        #expect(!notes[0].unicodeScalars.contains { (0x4E00 ... 0x9FFF).contains($0.value) }, "英文清单里不该有中文")
+        #expect(notes[1].unicodeScalars.contains { (0x4E00 ... 0x9FFF).contains($0.value) }, "中文清单的更新说明应是中文")
+    }
+
+    @Test("中文界面读中文的更新清单")
+    func chineseFeed() {
+        #expect(FeedSelector.chineseFeed(for: "https://github.com/lacdonlang/fidget/releases/latest/download/appcast.xml")
+            == "https://github.com/lacdonlang/fidget/releases/latest/download/appcast.zh-CN.xml")
     }
 }

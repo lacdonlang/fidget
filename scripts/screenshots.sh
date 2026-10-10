@@ -1,6 +1,6 @@
 #!/bin/bash
 # 生成 README 截图：调试构建的 Fidget 在进程内用固定示例数据渲染各个界面，不需要任何系统权限。
-# 每种界面语言、每种外观各一套，写到 <输出目录>/<语言>/<外观>/，例如 docs/images/en/dark/。
+# 每种界面语言、每种外观各一套，写到 <输出目录>/<语言>/<外观>/，例如 docs/images/en/dark/、docs/images/zh-CN/light/。
 # 用法: scripts/screenshots.sh [path/to/Fidget.app] [输出目录]
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
@@ -15,9 +15,12 @@ if ! nm "$BINARY" 2>/dev/null | grep ScreenshotRenderer > /dev/null; then
   exit 1
 fi
 
-for language in en zh-Hans; do
+# 目录名与文档一致（en、zh-CN）；渲染时用应用的本地化名称（en、zh-Hans）。
+for language in en zh-CN; do
+  localization="$language"
+  if [ "$language" = zh-CN ]; then localization=zh-Hans; fi
   for appearance in dark light; do
-    "$BINARY" --render-screenshots "$OUT/$language/$appearance" --language "$language" --appearance "$appearance"
+    "$BINARY" --render-screenshots "$OUT/$language/$appearance" --language "$localization" --appearance "$appearance"
   done
 done
 find "$OUT" -type f | sort

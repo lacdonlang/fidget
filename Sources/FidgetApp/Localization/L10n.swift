@@ -47,6 +47,13 @@ enum L {
         LanguageState.shared.identifier = language ?? LanguageState.system
     }
 
+    /// 界面实际显示的是不是中文：手动选的语言，或跟随系统时系统为本应用选中的本地化。
+    static var isChinese: Bool {
+        let bundle = current.withLock { $0.bundle }
+        let language = bundle == baseBundle ? baseBundle.preferredLocalizations.first ?? "en" : (bundle.bundlePath as NSString).lastPathComponent
+        return language.lowercased().hasPrefix("zh")
+    }
+
     /// 当前界面语言的区域设置，供日期、时长等格式化使用。
     static var locale: Locale { current.withLock { $0.locale } }
 

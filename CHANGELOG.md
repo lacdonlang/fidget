@@ -1,46 +1,52 @@
-# 更新日志
+# Changelog
+
+**English** · [简体中文](CHANGELOG.zh-CN.md)
+
+## 1.3.1
+
+- Update notes now follow the app language: the system language, or the one you choose in Settings → General → Language
+- The README, docs and changelog are now available in English and Chinese
 
 ## 1.3.0
 
-- 在线更新：每天自动检查新版本，确认后下载、校验签名、替换应用并重新启动；也可以设为在后台自动安装。设置在“高级 → 更新”
-- 修复：设置窗口侧边栏顶部的应用图标与文字没有和下面的分区对齐
-- 构建号改由版本号推出（1.3.0 → 10300），不再依赖 git 历史
+- In-app updates: Fidget checks for new versions daily; after you confirm, it downloads the update, verifies its signature, replaces the app and relaunches. Updates can also install automatically in the background (Settings → Advanced → Updates)
+- Fixed: the app icon and name at the top of the Settings sidebar weren't aligned with the sections below
+- The build number is now derived from the version (1.3.0 → 10300) instead of the git history
 
 ## 1.2.0
 
-- 设置窗口重新设计，参考 CleanMyMac 的风格：每个分区一种主题色，底色上一团淡淡的光晕，切换分区时随之过渡；玻璃卡片，自绘的发光开关、滑杆、分段选择与胶囊按钮
-- 浅色、深色两套配色；“通用”里新增“外观”：跟随系统（默认）、浅色、深色，作用于整个应用
-- 侧边栏底部显示当前状态和总开关；“移动”页的“立即移动”移到页头，轨迹改为五张卡片配发光预览；“防休眠”改为两张带说明的功能卡片；“高级”页的统计改为数字卡片
-- 引导与关于窗口换成同一风格
-- README 默认为英文（中文版改为 README.zh-CN.md），配上对应语言的截图；截图按语言与外观各一套，改存 JPEG（渐变存 PNG 每张两三 MB）
+- Redesigned Settings window inspired by CleanMyMac: each section has its own accent color and a soft glow that shifts as you switch sections; glass cards and custom glowing switches, sliders, segmented pickers and capsule buttons
+- Light and dark color schemes; new Appearance option in General: System (default), Light or Dark, applied to the whole app
+- The sidebar shows the current status and the main switch; Move Now moved to the Movement page header and patterns became five cards with a glowing preview; Keep Awake became two feature cards with descriptions; Advanced shows statistics as number cards
+- The setup assistant and About window share the new style
+- The README is now in English by default (the Chinese one moved to README.zh-CN.md) with screenshots in the matching language; there is one screenshot set per language and appearance, saved as JPEG (the gradients made each PNG 2–3 MB)
 
 ## 1.1.1
 
-- 修复：macOS 27 上菜单栏面板向上伸出屏幕，只露出最下面一行（面板先按 0 高度定位，再被内容向上撑开）
-- 新增“重置权限”：系统设置里 Fidget 的开关已经打开、应用却仍显示未授权时（授权记录来自签名不同的旧版本），删除旧记录并重新申请。入口在面板的权限横幅、引导页和“通用”设置
-- 测试：`make ui-test` 真实弹出菜单栏面板，检查它挂在菜单栏下方
+- Fixed: on macOS 27 the menu bar popover extended above the screen, showing only its bottom row (it was positioned at zero height and then grew upwards)
+- New Reset Permission: when Fidget's switch in System Settings is on but the app still isn't authorized (the record belongs to an older build with a different signature), it deletes the stale record and asks again. Available from the popover's permission banner, the setup assistant and General settings
+- Tests: `make ui-test` opens the real menu bar popover and checks that it hangs below the menu bar
 
 ## 1.1.0
 
-- 支持 macOS 11 Big Sur 及以上，覆盖 Apple Silicon 能运行的所有系统（此前要求 macOS 14）
-- 设置窗口改为自绘的侧边栏与分组卡片，各系统版本外观一致
-- macOS 11–12 的登录启动改用 LaunchAgent，升级到 macOS 13+ 后自动迁移到系统登录项
-- 日期、时长、星期名称跟随界面语言（此前在切换语言后仍跟随系统语言）
-- 修复：打开设置窗口时快捷键录制框会自动进入录制状态
-- 设置界面不再随运行数据每秒整体重算
-- 构建：CI 自动挑选能部署到 macOS 11 的 Xcode，按需内嵌 Swift 并发运行时，发布前检查产物并实际启动
+- Supports macOS 11 Big Sur and later, every release that runs on Apple Silicon (previously macOS 14)
+- The Settings window now uses a custom sidebar and grouped cards, so it looks the same on every macOS version
+- Launch at login uses a LaunchAgent on macOS 11–12 and moves to the system login item after upgrading to macOS 13 or later
+- Dates, durations and weekday names follow the app language (they used to follow the system language after switching)
+- Fixed: the shortcut recorder started recording as soon as Settings opened
+- The Settings window no longer recomputes every second along with live data
+- Build: CI picks an Xcode that can deploy to macOS 11, embeds the Swift concurrency runtime when needed, and checks and launches the app before release
 
 ## 1.0.1
 
-- 修复：GitHub 上构建的版本启动即崩溃（较旧的 SwiftPM 资源包结构下，语言文件没有复制进应用）
-- 打包时检查语言文件是否齐全，缺失则构建失败
+- Fixed: builds made on GitHub crashed at launch (with an older SwiftPM resource bundle layout, the language files weren't copied into the app)
+- Packaging now fails if a language file is missing
 
-## 1.0.0（未发布）
+## 1.0.0
 
-首个版本：从 automatic-mouse-mover 重新设计的原生 Apple Silicon 应用。
-
-- 闲时移动引擎：真实/合成输入区分、阈值与间隔、五种轨迹、隐形模式、边缘安全
-- 智能暂停：锁屏/屏保、电池、计划表、应用规则、媒体播放
-- 防休眠断言、全局快捷键、登录启动、`fidget://` 命令
-- 菜单栏面板、右键菜单、六分区设置窗口、首次引导、中英双语
-- SwiftPM + 脚本打包、Developer ID 签名/公证/DMG、XcodeGen 工程、CI
+- First version (unreleased): a native Apple Silicon redesign of automatic-mouse-mover
+- Idle movement engine: tells real input from its own, threshold and interval, five patterns, invisible mode, screen-edge safety
+- Smart pause: screen lock and screen saver, battery, schedule, app rules, media playback
+- Sleep prevention, global shortcut, launch at login, `fidget://` commands
+- Menu bar popover, right-click menu, six-section Settings window, setup assistant, English and Simplified Chinese
+- SwiftPM and script-based packaging, Developer ID signing, notarization and DMG, XcodeGen project, CI

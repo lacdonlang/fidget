@@ -8,7 +8,7 @@ MIN_MACOS="${MIN_MACOS%.}"; [[ "$MIN_MACOS" == *.* ]] || MIN_MACOS="$MIN_MACOS.0
 VERSION_BUILD="$(awk -F. '{ printf "%d", $1 * 10000 + $2 * 100 + $3 }' <<< "$VERSION")"
 # 版本号比较：version_le 11.0 12.0 → 真。
 version_le() { [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | head -1)" = "$1" ]; }
-# 本机签名配置（不入库，见 docs/SIGNING.md）。环境变量优先于文件。
+# 本机签名配置（不入库，见 docs/zh-CN/RELEASING.md）。环境变量优先于文件。
 if [ -z "${CODESIGN_IDENTITY:-}" ] && [ -f "$ROOT/.signing.env" ]; then source "$ROOT/.signing.env"; fi
 # "-" 为 ad-hoc（默认）；发布请使用 "Developer ID Application: 名字 (TEAMID)"
 CODESIGN_IDENTITY="${CODESIGN_IDENTITY:--}"

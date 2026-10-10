@@ -14,5 +14,5 @@ DerivedData/
 *.xcworkspace
 # 系统
 .DS_Store
-# 本地签名配置（见 docs/SIGNING.md）
+# 本地签名配置（见 docs/zh-CN/RELEASING.md）
 .signing.env

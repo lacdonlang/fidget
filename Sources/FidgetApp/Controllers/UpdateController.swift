@@ -7,15 +7,17 @@ import Sparkle
 ///
 /// 只在打包好的发布构建里启用：调试构建与 `swift run` 不检查更新，免得开发中的版本被替换成正式版。
 /// “自动检查”“自动安装”两个开关由 Sparkle 自己存进 UserDefaults；这里只把它们的当前值同步到 `UpdateState` 给界面显示。
+/// 更新说明有中英两份清单（appcast.xml、appcast.zh-CN.xml），按界面语言选用，见 `FeedSelector`。
 @MainActor
 final class UpdateController {
     private let controller: SPUStandardUpdaterController?
+    private let feedSelector = FeedSelector()
 
     init(state: UpdateState) {
         #if DEBUG
         controller = nil
         #else
-        controller = AppInfo.isBundled ? SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil) : nil
+        controller = AppInfo.isBundled ? SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: feedSelector, userDriverDelegate: nil) : nil
         #endif
         guard let updater = controller?.updater else { return }
         state.isAvailable = true
@@ -37,5 +39,18 @@ final class UpdateController {
 
     func setAutomaticallyInstalls(_ enabled: Bool) {
         controller?.updater.automaticallyDownloadsUpdates = enabled
+    }
+}
+
+/// 更新说明跟随界面语言（跟随系统，或在设置里手动选的语言）：中文界面读中文的更新清单，否则用 Info.plist 里的英文清单。
+/// Sparkle 每次检查前都会问一次，所以切换语言后下一次检查就生效。
+final class FeedSelector: NSObject, SPUUpdaterDelegate {
+    func feedURLString(for updater: SPUUpdater) -> String? {
+        guard L.isChinese, let feed = Bundle.main.object(forInfoDictionaryKey: "SUFeedURL") as? String else { return nil }
+        return Self.chineseFeed(for: feed)
+    }
+
+    static func chineseFeed(for feed: String) -> String {
+        feed.replacingOccurrences(of: "/appcast.xml", with: "/appcast.zh-CN.xml")
     }
 }
